@@ -1,0 +1,15 @@
+const assert=require('node:assert/strict');
+const {Patch,TYPES,Matter}=require('../dist/physics.js');
+function run(p,seconds){for(let i=0;i<seconds*120;i++)p.step(1000/120);}
+let count=0;
+function test(name,fn){fn();console.log('PASS '+name);count++;}
+test('Equal touching potatoes merge exactly once and award points',()=>{let merges=[];const p=new Patch({onMerge:m=>merges.push(m)});p.reset(false);p.add(0,195,530);p.add(0,235,530);run(p,1);assert.equal(p.bodies.length,1);assert.equal(p.bodies[0].plugin.tier,1);assert.equal(merges.length,1);assert.equal(p.score,10);});
+test('Different tiers settle without merging or falling through the floor',()=>{const p=new Patch();p.reset(false);p.add(0,180,300);p.add(1,220,300);run(p,4);assert.equal(p.bodies.length,2);assert.equal(p.merges,0);for(const b of p.bodies)assert.ok(b.position.y+TYPES[b.plugin.tier].r<560);});
+test('A group of matching potatoes merges without consuming a body twice',()=>{const p=new Patch();p.reset(false);[[190,530],[230,530],[190,480],[230,480]].forEach(([x,y])=>p.add(0,x,y));run(p,6);assert.ok(p.merges>=2);assert.equal(p.bodies.reduce((sum,b)=>sum+2**b.plugin.tier,0),4);});
+test('Drop respects bounds, cooldown and pause',()=>{const p=new Patch();p.reset(false);p.setAim(-900);assert.equal(p.aim,36);assert.equal(p.drop(),true);assert.equal(p.drop(),false);run(p,.5);assert.equal(p.drop(),true);p.paused=true;const t=p.time;run(p,1);assert.equal(p.time,t);assert.equal(p.drop(),false);});
+test('Shake costs 30 energy and cannot be used without enough',()=>{const p=new Patch();p.reset(false);p.add(3,220,510);assert.equal(p.shake(),true);assert.equal(p.energy,70);assert.ok(p.bodies[0].velocity.y<0);p.energy=29;assert.equal(p.shake(),false);assert.equal(p.energy,29);});
+test('Save and restore preserve progress and validate data',()=>{const p=new Patch();p.reset();p.score=400;p.merges=12;p.energy=42;p.setMode('bouncy');const data=p.snapshot(),q=new Patch();assert.equal(q.restore(data),true);assert.equal(q.score,400);assert.equal(q.bodies.length,5);assert.equal(q.mode,'bouncy');assert.equal(q.energy,42);assert.equal(q.restore({...data,current:40}),false);assert.equal(q.restore({...data,bodies:[{tier:0,x:NaN,y:2,angle:0}]}),false);});
+test('Overflow ends once after the grace period',()=>{let ended=0;const p=new Patch({onEnd:()=>ended++});p.reset(false);const b=p.add(3,220,100);Matter.Body.setStatic(b,true);run(p,6);assert.equal(p.ended,true);assert.equal(ended,1);});
+test('Final tier pair becomes a jackpot without an invalid tier',()=>{let event;const p=new Patch({onMerge:e=>event=e});p.reset(false);p.add(10,137,420);p.add(10,303,420);run(p,1);assert.equal(p.bodies.length,0);assert.equal(p.score,5000);assert.equal(event.jackpot,true);});
+test('A dense mixed patch stays finite during sustained play',()=>{const p=new Patch();p.reset();for(let i=0;i<140;i++){p.setAim(35+Math.random()*370);p.drop();run(p,.55);if(i%8===0)p.shake();for(const b of p.bodies){assert.ok(Number.isFinite(b.position.x)&&Number.isFinite(b.position.y));assert.ok(b.position.y<610);}}assert.ok(p.merges>0);});
+console.log(`${count} physics checks passed.`);

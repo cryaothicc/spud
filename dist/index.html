@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f5f3e9">
+  <meta name="description" content="Small spuds. Big feelings. Drop, match, and fall in love with eleven little potatoes in a cozy physics merge game.">
+  <title>Potato Club — Small spuds. Big feelings.</title>
+  <link rel="icon" href="assets/potato-7.png"><link rel="stylesheet" href="style.css">
+  <script defer src="assets/matter.min.js"></script><script defer src="physics.js"></script><script defer src="game.js"></script>
+</head>
+<body>
+<svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="i-sound" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
+<symbol id="i-mute" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4zM16 9l6 6m0-6-6 6"/></symbol>
+<symbol id="i-pause" viewBox="0 0 24 24"><path d="M8 5v14M16 5v14"/></symbol>
+<symbol id="i-play" viewBox="0 0 24 24"><path d="m7 4 13 8-13 8z"/></symbol>
+<symbol id="i-reset" viewBox="0 0 24 24"><path d="M3 10a9 9 0 1 1 1 7M3 4v6h6"/></symbol>
+<symbol id="i-help" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9a3 3 0 0 1 6 0c0 2-3 2-3 4m0 3v.1"/></symbol>
+<symbol id="i-crown" viewBox="0 0 24 24"><path d="m3 7 5 4 4-7 4 7 5-4-3 12H6zM7 22h10"/></symbol>
+<symbol id="i-spark" viewBox="0 0 24 24"><path d="m12 2 2.6 7.4L22 12l-7.4 2.6L12 22l-2.6-7.4L2 12l7.4-2.6z"/></symbol>
+<symbol id="i-shake" viewBox="0 0 24 24"><path d="m3 7-2 5 2 5m18-10 2 5-2 5"/><rect x="7" y="4" width="10" height="16" rx="4" transform="rotate(14 12 12)"/></symbol>
+<symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
+<symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 21S2 15 2 8a5 5 0 0 1 10-1 5 5 0 0 1 10 1c0 7-10 13-10 13Z"/></symbol>
+</defs></svg>
+<div class="site-wrap">
+<header class="topbar">
+  <a class="brand" href="./" aria-label="Potato Club home"><span class="brand-mascot"><img src="assets/potato-7.png" alt=""></span><span>potato<span class="brand-club">club</span></span></a>
+  <div class="header-tag"><span></span> GOOD THINGS GROW TOGETHER</div>
+  <nav class="toolbar" aria-label="Game controls">
+    <button id="help" class="icon-button" aria-label="How to play" title="How to play"><svg><use href="#i-help"/></svg></button>
+    <button id="sound" class="icon-button" aria-label="Mute sound" aria-pressed="true" title="Sound on"><svg><use href="#i-sound"/></svg></button>
+    <button id="pause" class="icon-button" aria-label="Pause game" title="Pause (P)"><svg><use href="#i-pause"/></svg></button>
+    <span class="toolbar-divider"></span>
+    <button id="restart" class="restart-button" aria-label="Start a new game"><svg><use href="#i-reset"/></svg><span>Fresh start</span></button>
+  </nav>
+</header>
+<main>
+<div class="game-layout">
+  <aside class="intro-panel" aria-label="Score and next potato">
+    <div class="eyebrow"><span class="tiny-flower">✳</span> A LITTLE MERGE MAGIC</div>
+    <h1>Small spuds.<br><em>Big feelings.</em></h1>
+    <p class="intro-copy">A little gravity. A little chaos.<br>A whole lot of potatoes.</p>
+    <section class="score-card" aria-label="Game score">
+      <div class="score-top"><span>YOUR SCORE</span><svg><use href="#i-spark"/></svg></div>
+      <div id="score" class="score-value">0</div>
+      <div class="score-bottom"><span><svg><use href="#i-crown"/></svg> Personal best</span><strong id="best">0</strong></div>
+      <span class="score-decoration" aria-hidden="true">✳</span>
+    </section>
+    <div class="next-card"><div><span class="eyebrow">UP NEXT</span><strong id="next-name">Lil’ Spud</strong><span class="next-hint">A tiny possibility.</span></div><div class="next-image-wrap"><img id="next-image" src="assets/potato-10.png" alt="Next potato"></div></div>
+    <div class="little-note"><span class="note-arrow" aria-hidden="true">↗</span><span>same potato + same potato<br><b>one bigger personality</b></span></div>
+  </aside>
+  <section class="play-panel" aria-label="Potato merge game">
+    <div class="board-heading"><span><i></i> THE POTATO PATCH</span><span id="merge-count">0 merges</span></div>
+    <div class="board-wrap" id="board-wrap">
+      <div class="glass-outline" aria-hidden="true"></div><span class="board-corner corner-left" aria-hidden="true"></span><span class="board-corner corner-right" aria-hidden="true"></span>
+      <canvas id="game" width="440" height="570" tabindex="0" aria-label="Potato playfield. Move to aim and click to drop. Arrow keys aim, Enter drops, A and D tilt, Space shakes, P pauses."></canvas>
+      <div class="drop-instruction" id="drop-instruction"><span class="pointer-icon">↓</span> aim. drop. make friends.</div>
+      <div class="danger-label" id="danger-label">A little too cozy! <span id="danger-time">3</span></div>
+      <div class="board-message" id="board-message" aria-live="polite"></div>
+      <div class="board-overlay" id="pause-overlay" hidden><span class="overlay-flower">✳</span><h2>Taking root.</h2><p>Your potatoes can wait.</p><button class="primary-button" id="resume"><svg><use href="#i-play"/></svg> Keep growing</button></div>
+    </div>
+    <div class="board-footer"><span><span class="mouse-symbol" aria-hidden="true"></span> <span id="input-hint">Move to aim · click to drop</span></span><div class="tilt-controls" aria-label="Tilt the playfield"><button id="tilt-left" aria-label="Tilt left" title="Hold A to tilt left">↶</button><span>tilt</span><button id="tilt-right" aria-label="Tilt right" title="Hold D to tilt right">↷</button></div></div>
+  </section>
+  <aside class="tools-panel" aria-label="Play style and power-ups">
+    <div class="play-style"><div class="section-eyebrow">MAKE YOURSELF AT HOME</div><h2>A little wiggle room.</h2><div class="mode-switch" role="group" aria-label="Physics style"><button data-mode="classic" aria-pressed="true">Classic</button><button data-mode="bouncy" aria-pressed="false">Extra bouncy <span>↗</span></button></div><p id="mode-description">Soft landings. Happy little accidents.</p></div>
+    <section class="shake-card"><div class="shake-top"><span class="shake-icon"><svg><use href="#i-shake"/></svg></span><span class="cost">30 <span>✳</span></span></div><h3>Shake things up.</h3><p>Give your spuds a little nudge.<br>Something good might happen.</p><button id="shake" class="primary-button"><svg><use href="#i-shake"/></svg> Shake the patch</button><div class="energy-label"><span>GOOD ENERGY</span><strong><span id="energy-number">100</span><span class="energy-max"> / 100</span></strong></div><div class="energy-track" role="progressbar" aria-label="Shake energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="energy-bar"><div id="energy-fill"></div></div><span class="energy-help">A little rest & every merge recharge you.</span></section>
+    <div class="how-card"><div class="how-title"><span>THE SHORT & SWEET</span><svg><use href="#i-heart"/></svg></div><div class="how-row"><span>01</span><p>Match two of a kind.<br><b>Meet someone new.</b></p></div><div class="how-row"><span>02</span><p>Keep below the dotted line.<br><b>Leave room to grow.</b></p></div><div class="how-row"><span>03</span><p>Find all 11 personalities.<br><b>Make it to the big love.</b></p></div></div>
+  </aside>
+</div>
+<section class="collection" aria-label="Potato collection">
+  <div class="collection-intro"><span class="section-eyebrow">THE WHOLE BUNCH</span><h2>Meet the spuds.</h2><span id="collection-progress">4 / 11 discovered</span></div>
+  <div class="collection-route" id="collection-route"></div>
+  <div class="collection-goal"><svg><use href="#i-heart"/></svg><span>a little love<br>goes a long way.</span></div>
+</section>
+</main>
+<footer class="page-footer"><span>Grown with love. Served with a little chaos.</span><div><span><kbd>←</kbd><kbd>→</kbd> aim</span><span><kbd>enter</kbd> drop</span><span><kbd>space</kbd> shake</span><span><kbd>P</kbd> pause</span></div><span class="footer-brand">STAY GROUNDED <span>✳</span></span></footer>
+</div>
+<div id="toast" class="toast" role="status"></div>
+<dialog id="modal" aria-labelledby="modal-title"><button id="modal-close" class="modal-close" aria-label="Close dialog">×</button><div id="modal-content"></div></dialog>
+</body></html>
