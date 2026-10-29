@@ -5,10 +5,11 @@
   <meta name="theme-color" content="#f5f3e9">
   <meta name="description" content="Small spuds. Big feelings. Drop, match, and fall in love with eleven little potatoes in a cozy physics merge game.">
   <title>Potato Club — Small spuds. Big feelings.</title>
-  <link rel="icon" href="assets/potato-7.png"><link rel="stylesheet" href="style.css">
-  <script defer src="assets/matter.min.js"></script><script defer src="shapes.js"></script><script defer src="physics.js"></script><script defer src="game.js"></script>
+  <link rel="icon" href="assets/potato-7.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+  <script defer src="viewport.js"></script><script defer src="assets/matter.min.js"></script><script defer src="shapes.js"></script><script defer src="physics.js"></script><script defer src="game.js"></script>
 </head>
 <body>
+<section class="mobile-notice" aria-labelledby="mobile-title"><div><span class="mobile-brand">potato<em>club</em></span><img src="assets/pc-only-potato.jpg" alt="A little potato waiting with its hands on its cheeks" width="253" height="310"><h1 id="mobile-title">PC only for now.</h1><p>This little spud needs a bigger screen.<br>Open Potato Club on your computer to play.</p><span class="mobile-signoff">We’ll save you a spot in the patch. ♡</span></div></section>
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
 <symbol id="i-sound" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
 <symbol id="i-mute" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4zM16 9l6 6m0-6-6 6"/></symbol>
@@ -62,7 +63,7 @@
     <div class="board-footer"><span><span class="mouse-symbol" aria-hidden="true"></span> <span id="input-hint">Move to aim · click to drop</span></span><div class="tilt-controls" aria-label="Tilt the playfield"><button id="tilt-left" aria-label="Tilt left" title="Hold A to tilt left">↶</button><span>tilt</span><button id="tilt-right" aria-label="Tilt right" title="Hold D to tilt right">↷</button></div></div>
   </section>
   <aside class="tools-panel" aria-label="Play style and power-ups">
-    <div class="play-style"><div class="section-eyebrow">MAKE YOURSELF AT HOME</div><h2>A little wiggle room.</h2><div class="mode-switch" role="group" aria-label="Physics style"><button data-mode="classic" aria-pressed="true">Soft &amp; jiggly</button><button data-mode="bouncy" aria-pressed="false">Extra bouncy <span>↗</span></button></div><p id="mode-description">Soft spuds. A happy little jiggle.</p></div>
+    <div class="play-style"><div class="section-eyebrow">MAKE YOURSELF AT HOME</div><h2>A little wiggle room.</h2><div class="physics-note"><svg><use href="#i-spark"/></svg><span>Soft, jiggly &amp; bouncy.</span></div><p>A happy little bounce in every spud.</p></div>
     <section class="shake-card"><div class="shake-top"><span class="shake-icon"><svg><use href="#i-shake"/></svg></span><span class="cost">30 <span>✳</span></span></div><h3>Shake things up.</h3><p>Give your spuds a little nudge.<br>Something good might happen.</p><button id="shake" class="primary-button"><svg><use href="#i-shake"/></svg> Shake the patch</button><div class="energy-label"><span>GOOD ENERGY</span><strong><span id="energy-number">100</span><span class="energy-max"> / 100</span></strong></div><div class="energy-track" role="progressbar" aria-label="Shake energy" aria-valuemin="0" aria-valuemax="100" aria-valuenow="100" id="energy-bar"><div id="energy-fill"></div></div><span class="energy-help">A little rest & every merge recharge you.</span></section>
     <div class="how-card"><div class="how-title"><span>THE SHORT & SWEET</span><svg><use href="#i-heart"/></svg></div><div class="how-row"><span>01</span><p>Match two of a kind.<br><b>Meet someone new.</b></p></div><div class="how-row"><span>02</span><p>Keep below the dotted line.<br><b>Leave room to grow.</b></p></div><div class="how-row"><span>03</span><p>Find all 11 personalities.<br><b>Make it to the big love.</b></p></div></div>
   </aside>
