@@ -14,11 +14,11 @@ h1{font-size:44px;margin:18px 0 14px}
 .next-image-wrap{width:60px;height:60px}
 .next-card img{width:55px;height:55px}
 .little-note{margin-top:16px}
-.board-heading{margin-bottom:8px}
+.play-panel{padding-top:27px}
 .board-footer{margin-top:13px}
 .play-style h2{margin:13px 0 14px}
-.physics-note{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;background:#e8ebdd;border:1px solid #dce0d0;border-radius:10px;font-size:12px}
-.physics-note svg{height:17px;width:17px;color:#9a9567}
+.merge-note{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;background:#e8ebdd;border:1px solid #dce0d0;border-radius:10px;font-size:12px;font-variant-numeric:tabular-nums}
+.merge-note svg{height:17px;width:17px;color:#9a9567}
 .play-style>p{font-size:10px;margin:10px 0 20px}
 .shake-card{padding:17px 20px}
 .shake-top{display:none}
