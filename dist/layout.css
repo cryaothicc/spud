@@ -19,6 +19,10 @@ h1{font-size:44px;margin:18px 0 14px}
 .play-style h2{margin:13px 0 14px}
 .merge-note{display:flex;align-items:center;justify-content:center;gap:9px;padding:12px;background:#e8ebdd;border:1px solid #dce0d0;border-radius:10px;font-size:12px;font-variant-numeric:tabular-nums}
 .merge-note svg{height:17px;width:17px;color:#9a9567}
+.merge-note{margin-bottom:20px}
+/* Close the paused container at its rim; keep the blur inside its border. */
+.board-overlay{inset:14% 0 0;border:2px solid #6b8262;border-radius:0 0 38px 38px;overflow:hidden}
+canvas:focus-visible{outline:none}
 .play-style>p{font-size:10px;margin:10px 0 20px}
 .shake-card{padding:17px 20px}
 .shake-top{display:none}
