@@ -52,7 +52,7 @@
     }
     randomTier(){const n=Math.random();return n<.35?0:n<.65?1:n<.88?2:3;}
     add(tier,x,y,opts={}){
-      const b=makeBody(tier,x,y,{restitution:.58,friction:.27,frictionStatic:.45,frictionAir:.009,density:.0018,slop:.05,sleepThreshold:95,plugin:{tier,born:this.time,lockUntil:this.time+80,entered:false,spring:0,springV:opts.squish?3.3:0,stretch:1}});
+      const b=makeBody(tier,x,y,{restitution:.54,friction:.27,frictionStatic:.45,frictionAir:.009,density:.0018,slop:.05,sleepThreshold:95,plugin:{tier,born:this.time,lockUntil:this.time+80,entered:false,spring:0,springV:opts.squish?3.3:0,stretch:1}});
       if(opts.angle)Matter.Body.setAngle(b,opts.angle);
       if(b.bounds.min.x<12)Matter.Body.translate(b,{x:12-b.bounds.min.x,y:0});
       if(b.bounds.max.x>428)Matter.Body.translate(b,{x:428-b.bounds.max.x,y:0});
@@ -69,8 +69,8 @@
     updateSpring(b,dt){
       const p=b.plugin;if(!this.deform||b.isStatic)return;
       const seconds=dt/1000;
-      p.springV+=(-185*p.spring-10*p.springV)*seconds;
-      p.spring=Math.max(-.14,Math.min(.2,p.spring+p.springV*seconds));
+      p.springV+=(-145*p.spring-9*p.springV)*seconds;
+      p.spring=Math.max(-.16,Math.min(.23,p.spring+p.springV*seconds));
       if(Math.abs(p.spring)<.0005&&Math.abs(p.springV)<.008){p.spring=0;p.springV=0;}
       const stretch=1+p.spring,ratio=stretch/p.stretch;
       if(Math.abs(ratio-1)>.0001){const angle=b.angle;Matter.Body.setAngle(b,0);Matter.Body.scale(b,ratio,1/ratio);Matter.Body.setAngle(b,angle);p.stretch=stretch;}
