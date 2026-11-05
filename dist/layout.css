@@ -311,4 +311,64 @@ dialog{max-height:calc(100dvh - 32px);overflow:auto}
   }
   .compact-game .help-steps { overflow: auto }
 }
+/* A landscape browser with its address bar open has plenty of width but few
+   vertical pixels. Let the board use that height and run the collection beside it. */
+@media (max-height: 390px) and (min-aspect-ratio: 23/10) {
+  .compact-game .site-wrap {
+    grid-template: "board brand      toolbar" 44px
+                   "board intro       tools" minmax(0, 1fr)
+                   "board intro       controls" 44px
+                   "board collection collection" 66px
+                   / auto minmax(0, 1fr) minmax(0, 1fr);
+    column-gap: clamp(12px, 2vw, 24px);
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  .compact-game .board-wrap { width: min(39cqw, calc(100cqh * 440 / 570)) }
+  .compact-game .brand { font-size: clamp(20px, 3vw, 27px) }
+  .compact-game .intro-panel h1 { font-size: clamp(18px, 6dvh, 26px); line-height: 1.06; margin: 0 0 8px }
+  .compact-game .intro-panel h1 br { display: none }
+  .compact-game .intro-panel h1 em::before { content: " " }
+  .compact-game .score-top, .compact-game .next-card .eyebrow { font-size: 10px; letter-spacing: 1px }
+  .compact-game .score-bottom, .compact-game .score-bottom strong { font-size: 12px }
+  .compact-game .next-card strong { font-size: 17px }
+  .compact-game .shake-card h3, .compact-game .shake-card::before { display: none }
+  .compact-game .shake-card button { font-size: 13px }
+  .compact-game .energy-label, .compact-game .energy-label strong { font-size: 10px }
+  .compact-game .play-style { display: flex; align-items: center; justify-content: space-between; gap: 6px; margin-bottom: 8px }
+  .compact-game .play-style h2 { font-size: clamp(16px, 2.3vw, 22px); margin: 0 }
+  .compact-game .merge-note { flex-shrink: 0; padding: 3px 7px; margin: 0; font-size: 12px }
+  .compact-game .board-footer { justify-content: flex-end }
+  .compact-game .collection { display: flex; flex-direction: column; justify-content: center; align-items: stretch; gap: 1px }
+  .compact-game .collection-intro { display: flex; flex: none; width: auto; align-items: baseline; justify-content: space-between }
+  .compact-game .collection-intro h2 { font-size: 16px }
+  .compact-game #collection-progress { font-size: 10px }
+  .compact-game .spud-image { width: min(100%, 34px) }
+  .compact-game .spud-number { font-size: 9px }
+}
+@media (max-height: 295px) and (min-aspect-ratio: 23/10) {
+  .compact-game .site-wrap {
+    grid-template-areas: "board brand toolbar" "board score tools" "board next controls" "board collection collection";
+    grid-template-rows: 44px minmax(0, 1fr) 44px 60px;
+    row-gap: 2px;
+  }
+  .compact-game .intro-panel { display: contents }
+  .compact-game .score-card {
+    grid-area: score;
+    align-self: center;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: baseline;
+    gap: 2px 6px;
+  }
+  .compact-game .score-top svg { display: none }
+  .compact-game .score-value { justify-self: end }
+  .compact-game .score-bottom { grid-column: 1 / -1 }
+  .compact-game .next-card { grid-area: next; margin: 0 }
+  .compact-game .shake-card { padding: 4px 6px }
+  .compact-game .energy-label { margin: 2px 0 }
+  .compact-game .energy-track { height: 4px }
+  .compact-game .play-style { margin: 0 }
+  .compact-game .collection { padding-top: 0 }
+}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
