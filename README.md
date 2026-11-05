@@ -1,6 +1,6 @@
 # Potato Club
 
-A desktop potato merge game, built with eleven transparent PNG characters. Static HTML, CSS, Canvas 2D and Matter.js 0.20.0; no build step or runtime service dependencies.
+A desktop and mobile potato merge game, built with eleven transparent PNG characters. Static HTML, CSS, Canvas 2D and Matter.js 0.20.0; no build step or runtime service dependencies.
 
 On Windows, double-click **Start Potato Club.cmd**. It starts the game and opens your browser. Keep its terminal window open while playing; close it or press Ctrl+C to stop. Node.js 18 or newer is required; no package installation or build is needed.
 
@@ -10,7 +10,7 @@ Mouse: move to aim, click to drop. Keyboard: arrows aim, Enter drops, A/D tilt, 
 
 The game includes eleven merge tiers, chain score multipliers, one combined soft, jiggly and bouncy physics setting, a rechargeable shake, an overflow grace period, an end screen, an ultimate-potato celebration, sound synthesis, and reduced-motion support.
 
-The complete desktop surface scales to the browser viewport without page scrolling. Mobile and touch-first devices, plus windows narrower than 761 CSS pixels, show a white “PC only for now” screen using the supplied potato image. The game does not start on that screen, and an existing session pauses when switching into it. `dist/viewport.js` and `dist/layout.css` control this behavior. Legacy saves from either former physics mode use the combined setting automatically.
+On phones, turn the device sideways to play. Drag a potato across the board to aim and lift your finger to drop it. Hold a tilt arrow to lean the board, tap Shake to use energy, or swipe through the collection. Turning upright freezes the board until you return to landscape. The desktop layout and keyboard controls are also available.
 
 Characters render as the original transparent PNGs, without circular backplates or round colliders. `scripts/build-shapes.cjs` reads the PNG alpha, traces the main connected silhouette and its transparent holes, simplifies the contour, triangulates with Earcut, and combines convex pieces into compound Matter.js bodies. Detached tear droplets and tiny alpha specks stay decorative. The outlines approximate the pixels for stable, efficient collision detection. Run `node scripts/build-shapes.cjs` after replacing artwork.
 

@@ -1,6 +1,5 @@
 (()=>{
  'use strict';
- if(window.PotatoViewport.mobile){window.addEventListener('potato:viewport',e=>{if(!e.detail.mobile)location.reload();});return;}
  const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
  const {Patch,TYPES,GEOMETRY}=PotatoPhysics;const canvas=$('#game'),ctx=canvas.getContext('2d');
  const STORE='potato-club-v1',PREFS='potato-club-prefs-v1';
@@ -34,15 +33,27 @@
  function togglePause(force){if(patch.ended||$('#modal').open)return;patch.paused=typeof force==='boolean'?force:!patch.paused;patch.tilt=0;keys.clear();$('#pause-overlay').hidden=!patch.paused;updateUI();save();}
  function shake(){unlockAudio();if(patch.shake()){shakeTime=450;playSound('shake');updateUI();save();}else if(patch.energy<30)toast('A little recharge first. Shaking takes 30 energy.');}
  $('#help').onclick=help;$('#restart').onclick=restart;$('#pause').onclick=()=>togglePause();$('#resume').onclick=()=>{unlockAudio();togglePause(false);};$('#shake').onclick=shake;$('#sound').onclick=()=>{soundOn=!soundOn;if(soundOn){unlockAudio();playSound('merge',3);}updateUI();savePrefs();};
- window.addEventListener('potato:viewport',e=>{if(e.detail.mobile){save();if($('#modal').open)$('#modal').close();togglePause(true);}lastFrame=0;});
  function point(e){const r=canvas.getBoundingClientRect();aimX=(e.clientX-r.left)*440/r.width;patch.setAim(aimX);keyboardAim=false;}
- let touchPointer=null,touchStart=null;
+ let touchPointer = null;
+ window.addEventListener('potato:viewport', () => {
+   touchPointer = null;
+   keys.clear();
+   patch.tilt = 0;
+   document.querySelectorAll('.tilt-controls .active').forEach(button => button.classList.remove('active'));
+   accumulator = 0;
+   lastFrame = 0;
+   if (window.PotatoViewport.needsRotation) save();
+ });
  canvas.addEventListener('pointermove',e=>{if(e.pointerType==='mouse'||e.pointerId===touchPointer)point(e);});
- canvas.addEventListener('pointerdown',e=>{if(!ready||patch.paused||patch.ended)return;e.preventDefault();unlockAudio();canvas.focus({preventScroll:true});point(e);if(e.pointerType==='mouse'){patch.drop();}else{touchPointer=e.pointerId;touchStart={x:e.clientX,y:e.clientY};canvas.setPointerCapture(e.pointerId);}});
- canvas.addEventListener('pointerup',e=>{if(e.pointerId===touchPointer){point(e);patch.drop();touchPointer=null;touchStart=null;}});
- canvas.addEventListener('pointercancel',()=>{touchPointer=null;touchStart=null;});
+ canvas.addEventListener('pointerdown',e=>{if(!ready||patch.paused||patch.ended||touchPointer!==null||window.PotatoViewport.needsRotation)return;e.preventDefault();unlockAudio();canvas.focus({preventScroll:true});point(e);if(e.pointerType==='mouse'){patch.drop();}else{touchPointer=e.pointerId;canvas.setPointerCapture(e.pointerId);}});
+ canvas.addEventListener('pointerup',e=>{if(e.pointerId===touchPointer){point(e);patch.drop();touchPointer=null;}});
+  const cancelAim = event => {
+   if (event.pointerId === touchPointer) touchPointer = null;
+ };
+ canvas.addEventListener('pointercancel', cancelAim);
+ canvas.addEventListener('lostpointercapture', cancelAim);
  ['left','right'].forEach((side,i)=>{const b=$('#tilt-'+side);const stop=()=>{patch.tilt=0;b.classList.remove('active');};b.addEventListener('pointerdown',e=>{if(patch.paused||patch.ended)return;e.preventDefault();b.setPointerCapture(e.pointerId);patch.tilt=i?1:-1;b.classList.add('active');});b.addEventListener('pointerup',stop);b.addEventListener('pointercancel',stop);b.addEventListener('lostpointercapture',stop);b.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!patch.paused&&!patch.ended){e.preventDefault();patch.tilt=i?1:-1;b.classList.add('active');}});b.addEventListener('keyup',stop);b.addEventListener('blur',stop);});
- window.addEventListener('keydown',e=>{if($('#modal').open)return;if(e.target instanceof HTMLButtonElement&&['Enter',' '].includes(e.key))return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','enter',' ','a','d','p','escape'].includes(k))e.preventDefault();if(['p','escape'].includes(k)&&!e.repeat){togglePause();return;}if(patch.paused||patch.ended||!ready)return;if(k==='enter'&&!e.repeat){unlockAudio();patch.drop();}if(k===' '&&!e.repeat)shake();if(['arrowleft','arrowright','a','d'].includes(k)){keys.add(k);keyboardAim=true;}});
+ window.addEventListener('keydown',e=>{if(window.PotatoViewport.needsRotation||$('#modal').open)return;if(e.target instanceof HTMLButtonElement&&['Enter',' '].includes(e.key))return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','enter',' ','a','d','p','escape'].includes(k))e.preventDefault();if(['p','escape'].includes(k)&&!e.repeat){togglePause();return;}if(patch.paused||patch.ended||!ready)return;if(k==='enter'&&!e.repeat){unlockAudio();patch.drop();}if(k===' '&&!e.repeat)shake();if(['arrowleft','arrowright','a','d'].includes(k)){keys.add(k);keyboardAim=true;}});
  window.addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys.delete(k);if(k==='a'||k==='d')patch.tilt=0;});
  window.addEventListener('blur',()=>{keys.clear();patch.tilt=0;touchPointer=null;});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){save();if(!patch.paused&&!patch.ended&&!$('#modal').open)togglePause(true);}lastFrame=0;});
@@ -58,6 +69,6 @@
  for(const p of floaters){ctx.save();ctx.globalAlpha=Math.max(0,p.life);ctx.font='bold 17px Georgia';ctx.textAlign='center';ctx.strokeStyle='#f7f3e8';ctx.lineWidth=3;ctx.strokeText(p.text,p.x,p.y);ctx.fillStyle='#527347';ctx.fillText(p.text,p.x,p.y);ctx.restore();if(moving){p.y-=dt*.035;p.life-=dt*.0009;}}floaters=floaters.filter(p=>p.life>0);
  $('#danger-label').classList.toggle('visible',danger&&!patch.ended);if(danger)$('#danger-time').textContent=Math.max(1,Math.ceil((3200-patch.danger)/1000));
  }
- function loop(now){if(!lastFrame)lastFrame=now;const dt=Math.min(40,now-lastFrame);lastFrame=now;if(ready&&!window.PotatoViewport.mobile){if(!patch.paused&&!patch.ended){if(keys.has('arrowleft'))patch.setAim(patch.aim-dt*.32);if(keys.has('arrowright'))patch.setAim(patch.aim+dt*.32);if(keys.has('a')||keys.has('d'))patch.tilt=keys.has('a')?-1:1;accumulator+=dt;while(accumulator>=1000/120){patch.step(1000/120);accumulator-=1000/120;}}else accumulator=0;draw(dt);if(shakeTime>0){shakeTime-=dt;$('#board-wrap').style.transform=reduced?'':`translateX(${Math.sin(shakeTime*.08)*3*shakeTime/450}px)`;}else $('#board-wrap').style.transform=patch.tilt&&!reduced?`rotate(${patch.tilt*1.2}deg)`:'';uiClock+=dt;if(uiClock>200){updateUI();uiClock=0;}saveClock+=dt;if(saveClock>3000){save();saveClock=0;}}requestAnimationFrame(loop);}
+ function loop(now){if(!lastFrame)lastFrame=now;const dt=Math.min(40,now-lastFrame);lastFrame=now;if(ready&&!window.PotatoViewport.needsRotation){if(!patch.paused&&!patch.ended){if(keys.has('arrowleft'))patch.setAim(patch.aim-dt*.32);if(keys.has('arrowright'))patch.setAim(patch.aim+dt*.32);if(keys.has('a')||keys.has('d'))patch.tilt=keys.has('a')?-1:1;accumulator+=dt;while(accumulator>=1000/120){patch.step(1000/120);accumulator-=1000/120;}}else accumulator=0;draw(dt);if(shakeTime>0){shakeTime-=dt;$('#board-wrap').style.transform=reduced?'':`translateX(${Math.sin(shakeTime*.08)*3*shakeTime/450}px)`;}else $('#board-wrap').style.transform=patch.tilt&&!reduced?`rotate(${patch.tilt*1.2}deg)`:'';uiClock+=dt;if(uiClock>200){updateUI();uiClock=0;}saveClock+=dt;if(saveClock>3000){save();saveClock=0;}}requestAnimationFrame(loop);}
  Promise.all(TYPES.map(t=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('A potato could not load.'));img.src=`assets/potato-${t.asset}.png`;}))).then(result=>{images=result;let restored=false;try{restored=patch.restore(JSON.parse(localStorage.getItem(STORE)||'null'));}catch{}if(!restored)patch.reset();started=restored&&(patch.merges>0||patch.bodies.length>5);if(started)$('#drop-instruction').classList.add('hidden');ready=true;resize();updateCollection();updateUI();if(matchMedia('(pointer:coarse)').matches)$('#input-hint').textContent='Drag to aim · lift to drop';requestAnimationFrame(loop);}).catch(()=>{toast('A potato went missing. Refresh to try loading again.');$('#drop-instruction').textContent='Couldn’t load the potatoes. Please refresh.';});
 })();

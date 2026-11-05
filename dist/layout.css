@@ -40,21 +40,114 @@ canvas:focus-visible{outline:none}
 .spud-image{max-width:60px}
 .page-footer{height:38px;padding:0}
 dialog{max-height:calc(100dvh - 32px);overflow:auto}
-.mobile-notice{display:none}
-@media(max-width:760px),(hover:none) and (pointer:coarse){
-  body{background:white}
-  .site-wrap,.toast,dialog{display:none!important}
-  .mobile-notice{height:100dvh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:white;color:#294b3e}
+
+.mobile-notice { display: none }
+.rotate-device body { background: white }
+.rotate-device .site-wrap, .rotate-device .toast { display: none }
+.rotate-device .mobile-notice {
+  height: 100dvh;
+  padding: 24px;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  background: white;
 }
-.mobile-only body{background:white}
-.mobile-only .site-wrap,.mobile-only .toast,.mobile-only dialog{display:none!important}
-.mobile-only .mobile-notice{height:100dvh;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;background:white;color:#294b3e}
-.mobile-notice>div{max-width:360px}
-.mobile-brand{display:block;font:bold 24px Georgia;letter-spacing:-1px;margin-bottom:24px}
-.mobile-brand em{font-weight:normal;margin-left:3px}
-.mobile-notice img{display:block;width:190px;height:auto;max-width:55vw;max-height:40dvh;object-fit:contain;margin:0 auto}
-.mobile-notice h1{font:normal 31px/1.2 Georgia;letter-spacing:-.8px;margin:24px 0 13px;white-space:normal}
-.mobile-notice p{font:14px/1.8 Arial;color:#7d8574;margin:0}
-.mobile-signoff{display:block;font:11px/1.6 Arial;color:#a3aa98;margin-top:26px}
-@media(max-height:480px){.mobile-brand{margin-bottom:10px}.mobile-notice h1{margin:12px 0 8px;font-size:26px}.mobile-signoff{margin-top:12px}.mobile-notice img{max-height:30dvh}}
+.mobile-brand { font: bold 24px var(--serif); letter-spacing: -1px }
+.mobile-brand em { font-weight: normal; margin-left: 3px }
+.mobile-notice img { display: block; width: min(46vw, 180px); max-height: 40dvh; object-fit: contain; margin: 24px auto }
+.mobile-notice h1 { font: normal 32px var(--serif); letter-spacing: -1px; margin: 0 0 10px }
+.mobile-notice p { color: var(--muted); margin: 0 }
+
+/* Side panels leave the full available height for aiming and stacking. */
+.compact-game .site-wrap {
+  position: relative;
+  inset: auto;
+  transform: none;
+  width: 100%;
+  max-width: 1280px;
+  height: 100dvh;
+  margin: auto;
+  padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
+           max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  container-type: size;
+  display: grid;
+  grid-template: "brand board toolbar" 44px "intro board tools" minmax(0, 1fr)
+                 "collection board controls" 62px / minmax(0, 1fr) auto minmax(0, 1fr);
+  column-gap: clamp(8px, 2vw, 28px);
+}
+.compact-game :is(.topbar, .site-wrap > main, .game-layout, .play-panel) { display: contents }
+.compact-game :is(.header-tag, .toolbar-divider, .restart-button span, .intro-panel > .eyebrow,
+                  .intro-panel h1, .intro-copy, .little-note, .next-hint, .how-card, .page-footer,
+                  .play-style .section-eyebrow, .play-style h2, .shake-card h3, .shake-card p,
+                  .energy-help, .collection-intro h2, .collection-intro > span:last-child, .modal-keys) { display: none }
+
+.compact-game .brand { grid-area: brand; gap: 6px; font-size: clamp(18px, 3vw, 28px); align-self: center }
+.compact-game .brand-mascot { width: 30px; height: 32px }
+.compact-game .toolbar { grid-area: toolbar; align-self: center; justify-content: space-between; gap: 0 }
+.compact-game .toolbar button { padding: 0; width: 25%; min-width: 0; height: 44px; justify-content: center }
+.compact-game .board-wrap {
+  grid-area: board;
+  width: min(43cqw, 77.19cqh);
+  align-self: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.compact-game .intro-panel, .compact-game .tools-panel {
+  align-self: center;
+  width: 100%;
+  max-width: 300px;
+  max-height: 100%;
+  overflow-y: auto;
+  padding: 4px 0 6px;
+  justify-self: center;
+}
+.compact-game .intro-panel { grid-area: intro }
+.compact-game .score-card { padding: 10px 12px 0 }
+.compact-game .score-value { font-size: clamp(28px, 7dvh, 48px); margin: 3px 0 6px }
+.compact-game .score-bottom { padding: 6px 0; gap: 2px }
+.compact-game .next-card { margin-top: 9px; padding: 7px 10px; min-height: 54px; gap: 2px }
+.compact-game .next-card strong { font-size: 16px; margin: 3px 0 0 }
+.compact-game .next-image-wrap, .compact-game .next-card img { width: 40px; height: 40px }
+.compact-game .tools-panel { grid-area: tools }
+.compact-game .merge-note { margin-bottom: 8px; padding: 7px }
+.compact-game .shake-card { padding: 10px }
+.compact-game .shake-card button { min-height: 44px; padding: 4px 6px }
+.compact-game .energy-label { margin: 9px 0 6px }
+.compact-game .board-footer {
+  grid-area: controls;
+  align-self: end;
+  flex-direction: column;
+  gap: 3px;
+  margin: 0;
+  color: var(--ink);
+  font-size: 10px;
+}
+.compact-game .mouse-symbol { display: none }
+.compact-game .tilt-controls button { width: 44px; height: 44px; touch-action: none; user-select: none }
+.compact-game .collection {
+  grid-area: collection;
+  display: block;
+  min-width: 0;
+  height: auto;
+  padding: 4px 0 0;
+  border-bottom: 0;
+  overflow: hidden;
+}
+.compact-game .collection-intro { line-height: 9px }
+.compact-game .collection-route {
+  overflow-x: auto;
+  justify-content: flex-start;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+.compact-game .spud-item { flex: 0 0 44px; height: 45px; justify-content: center }
+.compact-game .spud-image { width: 32px }
+.compact-game .spud-number { margin-top: 0 }
+.compact-game .spud-item::after { display: none }
+.compact-game .board-overlay h2 { font-size: clamp(21px, 5dvh, 34px); margin: 4px 0 }
+.compact-game .overlay-flower { font-size: 25px }
+.compact-game .board-overlay p { margin-bottom: 12px }
+.compact-game .board-overlay button { min-height: 44px }
+.compact-game .board-message { font-size: clamp(16px, 4dvh, 24px) }
+.compact-game .modal-close { width: 44px; height: 44px }
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
