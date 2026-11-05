@@ -10,7 +10,7 @@ Mouse: move to aim, click to drop. Keyboard: arrows aim, Enter drops, A/D tilt, 
 
 The game includes eleven merge tiers, chain score multipliers, one combined soft, jiggly and bouncy physics setting, a rechargeable shake, an overflow grace period, an end screen, an ultimate-potato celebration, sound synthesis, and reduced-motion support.
 
-On phones, turn the device sideways to play. Drag a potato across the board to aim and lift your finger to drop it. Hold a tilt arrow to lean the board, tap Shake to use energy, or swipe through the collection. Turning upright freezes the board until you return to landscape. The desktop layout and keyboard controls are also available.
+On phones, turn the device sideways to play. Drag a potato across the board to aim and lift your finger to drop it. Hold a tilt arrow to lean the board or tap Shake to use energy. All eleven potatoes appear below the board. Tap any one to open its character card. Turning upright freezes the board until you return to landscape. The desktop layout and keyboard controls are also available.
 
 Characters render as the original transparent PNGs, without circular backplates or round colliders. `scripts/build-shapes.cjs` reads the PNG alpha, traces the main connected silhouette and its transparent holes, simplifies the contour, triangulates with Earcut, and combines convex pieces into compound Matter.js bodies. Detached tear droplets and tiny alpha specks stay decorative. The outlines approximate the pixels for stable, efficient collision detection. Run `node scripts/build-shapes.cjs` after replacing artwork.
 
