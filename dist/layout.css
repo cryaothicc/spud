@@ -67,23 +67,23 @@ dialog{max-height:calc(100dvh - 32px);overflow:auto}
   max-width: 1280px;
   height: 100dvh;
   margin: auto;
-  padding: max(6px, env(safe-area-inset-top)) max(10px, env(safe-area-inset-right))
-           max(10px, env(safe-area-inset-bottom)) max(10px, env(safe-area-inset-left));
+  padding: max(6px, env(safe-area-inset-top)) max(clamp(10px, 2vw, 26px), env(safe-area-inset-right))
+           max(10px, env(safe-area-inset-bottom)) max(clamp(10px, 2vw, 26px), env(safe-area-inset-left));
   container-type: size;
   display: grid;
   grid-template: "brand board toolbar" 44px "intro board tools" minmax(0, 1fr)
-                 "collection board controls" 62px / minmax(0, 1fr) auto minmax(0, 1fr);
+                 "collection board controls" 68px / minmax(0, 1fr) auto minmax(0, 1fr);
   column-gap: clamp(8px, 2vw, 28px);
 }
 .compact-game :is(.topbar, .site-wrap > main, .game-layout, .play-panel) { display: contents }
 .compact-game :is(.header-tag, .toolbar-divider, .restart-button span, .intro-panel > .eyebrow,
-                  .intro-panel h1, .intro-copy, .little-note, .next-hint, .how-card, .page-footer,
-                  .play-style .section-eyebrow, .play-style h2, .shake-card h3, .shake-card p,
-                  .energy-help, .collection-intro h2, .collection-intro > span:last-child, .modal-keys) { display: none }
+                  .intro-copy, .little-note, .next-hint, .how-card, .page-footer,
+                  .play-style .section-eyebrow, .shake-card p, .energy-help,
+                  .collection-intro .section-eyebrow, .modal-keys) { display: none }
 
-.compact-game .brand { grid-area: brand; gap: 6px; font-size: clamp(18px, 3vw, 28px); align-self: center }
+.compact-game .brand { grid-area: brand; gap: 6px; font-size: clamp(18px, 3vw, 28px); border-bottom: 1px solid var(--line) }
 .compact-game .brand-mascot { width: 30px; height: 32px }
-.compact-game .toolbar { grid-area: toolbar; align-self: center; justify-content: space-between; gap: 0 }
+.compact-game .toolbar { grid-area: toolbar; justify-content: space-between; gap: 0; border-bottom: 1px solid var(--line) }
 .compact-game .toolbar button { padding: 0; width: 25%; min-width: 0; height: 44px; justify-content: center }
 .compact-game .board-wrap {
   grid-area: board;
@@ -95,27 +95,66 @@ dialog{max-height:calc(100dvh - 32px);overflow:auto}
 .compact-game .intro-panel, .compact-game .tools-panel {
   align-self: center;
   width: 100%;
-  max-width: 300px;
   max-height: 100%;
   overflow-y: auto;
   padding: 4px 0 6px;
   justify-self: center;
 }
 .compact-game .intro-panel { grid-area: intro }
-.compact-game .score-card { padding: 10px 12px 0 }
-.compact-game .score-value { font-size: clamp(28px, 7dvh, 48px); margin: 3px 0 6px }
+.compact-game .intro-panel h1 {
+  margin: 0 0 clamp(6px, 2dvh, 14px);
+  font-size: clamp(24px, min(4vw, 8dvh), 44px);
+  line-height: .99;
+  letter-spacing: -.045em;
+}
+.compact-game .score-card { padding: 9px 12px 0; background: linear-gradient(115deg, #23493b, #355a43) }
+.compact-game .score-decoration { color: #cbe9a411; top: -15px; right: -7px }
+.compact-game .score-value { font-size: clamp(28px, 8dvh, 44px); margin: 2px 0 5px }
 .compact-game .score-bottom { padding: 6px 0; gap: 2px }
-.compact-game .next-card { margin-top: 9px; padding: 7px 10px; min-height: 54px; gap: 2px }
+.compact-game .next-card { margin-top: 9px; padding: 7px 10px; min-height: 54px; gap: 2px; background: #fcfaef }
 .compact-game .next-card strong { font-size: 16px; margin: 3px 0 0 }
-.compact-game .next-image-wrap, .compact-game .next-card img { width: 40px; height: 40px }
+.compact-game .next-image-wrap, .compact-game .next-card img { width: clamp(34px, 12dvh, 54px); height: clamp(34px, 12dvh, 54px) }
 .compact-game .tools-panel { grid-area: tools }
-.compact-game .merge-note { margin-bottom: 8px; padding: 7px }
-.compact-game .shake-card { padding: 10px }
+.compact-game .play-style h2 { font-size: clamp(17px, 3vw, 27px); line-height: 1.05; margin: 0 0 7px }
+.compact-game .merge-note {
+  width: fit-content;
+  padding: 4px 11px;
+  margin-bottom: clamp(8px, 3dvh, 16px);
+  border-radius: 20px;
+  font-size: 11px;
+}
+.compact-game .shake-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(8px, 1.5vw, 16px);
+  background-color: #f5dea0;
+}
+.compact-game .shake-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  width: clamp(32px, 6vw, 70px);
+  height: clamp(32px, 12dvh, 55px);
+  top: 3px;
+  right: 5%;
+  background: url("assets/potato-6.png") center / contain no-repeat;
+  transform: rotate(12deg);
+}
+.compact-game .shake-card h3 {
+  margin: 0 0 9px;
+  max-width: 79%;
+  font-size: clamp(18px, 2.5vw, 28px);
+  line-height: 1.04;
+}
 .compact-game .shake-card button { min-height: 44px; padding: 4px 6px }
 .compact-game .energy-label { margin: 9px 0 6px }
 .compact-game .board-footer {
   grid-area: controls;
-  align-self: end;
+  height: 100%;
+  padding-top: 5px;
+  border-top: 1px solid var(--line);
+  justify-content: space-between;
   flex-direction: column;
   gap: 3px;
   margin: 0;
@@ -133,7 +172,9 @@ dialog{max-height:calc(100dvh - 32px);overflow:auto}
   border-bottom: 0;
   overflow: hidden;
 }
-.compact-game .collection-intro { line-height: 9px }
+.compact-game .collection-intro { display: flex; align-items: baseline; justify-content: space-between; gap: 4px }
+.compact-game .collection-intro h2 { margin: 0; font-size: clamp(14px, 2vw, 19px); line-height: 1 }
+.compact-game #collection-progress { color: #65745d; font-size: 9px; white-space: nowrap }
 .compact-game .collection-route {
   overflow-x: auto;
   justify-content: flex-start;
@@ -149,5 +190,115 @@ dialog{max-height:calc(100dvh - 32px);overflow:auto}
 .compact-game .board-overlay p { margin-bottom: 12px }
 .compact-game .board-overlay button { min-height: 44px }
 .compact-game .board-message { font-size: clamp(16px, 4dvh, 24px) }
-.compact-game .modal-close { width: 44px; height: 44px }
+.compact-game dialog {
+  width: min(580px, calc(100vw - 32px - env(safe-area-inset-left) - env(safe-area-inset-right)));
+  max-height: calc(100dvh - 20px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  padding: clamp(12px, 4dvh, 24px);
+  border-radius: 18px;
+  overscroll-behavior: contain;
+}
+.compact-game .modal-close {
+  z-index: 1;
+  right: 2px;
+  top: 2px;
+  width: 44px;
+  height: 44px;
+}
+.compact-game .modal-kicker { padding-right: 26px; font-size: 9px; color: #677955 }
+.compact-game .modal-title { margin: 5px 0; font-size: clamp(24px, 7.5dvh, 35px); line-height: 1.06 }
+.compact-game .modal-copy { margin: 5px 0; font-size: 12px; line-height: 1.45; color: #61725a }
+.compact-game .modal-actions { margin-top: 10px }
+.compact-game .modal-actions button { min-height: 44px }
+.compact-game #modal-content:has(.modal-art) {
+  display: grid;
+  grid-template-columns: minmax(100px, .64fr) minmax(0, 1fr);
+  gap: 2px clamp(12px, 3vw, 26px);
+  align-content: center;
+  text-align: left;
+}
+.compact-game #modal-content:has(.modal-art)::before,
+.compact-game .modal-art { grid-area: 1 / 1 / span 6 / 2 }
+.compact-game #modal-content:has(.modal-art)::before {
+  content: "";
+  border-radius: 12px;
+  background: radial-gradient(#a59e7230 1px, transparent 1px) 0 0 / 8px 8px, #eee8ca;
+  border: 1px solid #e0d9b6;
+}
+.compact-game .modal-art {
+  position: relative;
+  align-self: center;
+  width: 85%;
+  height: clamp(88px, 32dvh, 145px);
+  margin: 12px auto;
+}
+.compact-game #modal-content:has(.modal-art) > :not(.modal-art) { grid-column: 2; text-align: left }
+.compact-game .modal-meta { justify-content: flex-start; flex-wrap: wrap; gap: 4px; margin-top: 4px }
+.compact-game .modal-meta span { padding: 4px 8px; color: #566b50 }
+.compact-game .end-score { font-size: 32px; margin: 0 }
+.compact-game dialog:has(.help-steps) { width: min(660px, calc(100vw - 32px - env(safe-area-inset-left) - env(safe-area-inset-right))) }
+.compact-game #modal-content:has(.help-steps) > .modal-copy { display: none }
+.compact-game .help-steps {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin: 12px 0;
+}
+.compact-game .help-steps li {
+  background: #eeefdf;
+  border-radius: 10px;
+  padding: 9px;
+  gap: 8px;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #596e51;
+}
+.compact-game .help-number { min-width: 22px; height: 22px; background: #fdfbef }
+.compact-game .help-steps strong { margin: 0 0 2px; line-height: 1.18 }
+
+@media (max-height: 350px), (max-width: 650px) {
+  .compact-game .intro-panel h1 { font-size: 20px; margin: 0 0 5px }
+  .compact-game .score-card { padding: 6px 8px 0 }
+  .compact-game .score-top { font-size: 8px; letter-spacing: 1px }
+  .compact-game .score-top svg { width: 13px; height: 13px }
+  .compact-game .score-value { font-size: 25px; margin: 1px 0 3px }
+  .compact-game .score-bottom { padding: 4px 0; font-size: 9px }
+  .compact-game .score-bottom > span { gap: 3px }
+  .compact-game .score-bottom strong { font-size: 11px }
+  .compact-game .next-card { margin-top: 6px; min-height: 44px; padding: 3px 7px }
+  .compact-game .next-card strong { font-size: 14px }
+  .compact-game .play-style h2 { font-size: 17px; margin-bottom: 4px }
+  .compact-game .merge-note { margin-bottom: 6px; padding: 3px 8px }
+  .compact-game .shake-card { padding: 7px }
+  .compact-game .shake-card h3 { font-size: 16px; margin-bottom: 5px }
+  .compact-game .shake-card button { gap: 4px; font-size: 10px }
+  .compact-game .energy-label { margin-top: 6px }
+  .compact-game .collection-intro h2 { font-size: 14px }
+  .compact-game .collection-intro { align-items: center }
+  .compact-game .help-steps { gap: 5px; margin: 7px 0 }
+  .compact-game .help-steps li { padding: 6px 8px }
+}
+@media (max-width: 650px) {
+  .compact-game #collection-progress { display: none }
+  .compact-game .shake-card h3, .compact-game .shake-card::before { display: none }
+  .compact-game .play-style {
+    padding-right: 26px;
+    background: url("assets/potato-6.png") right bottom 4px / 32px auto no-repeat;
+  }
+}
+@media (max-height: 295px) {
+  .compact-game .intro-panel h1, .compact-game .play-style h2 { display: none }
+  .compact-game .site-wrap { grid-template-rows: 44px minmax(0, 1fr) 58px }
+  .compact-game .collection { padding-top: 0 }
+  .compact-game .collection-intro h2 { font-size: 13px }
+  .compact-game .board-footer { flex-direction: row; justify-content: center; gap: 5px }
+  .compact-game .board-footer > span { display: none }
+  .compact-game .shake-card h3 { display: none }
+  .compact-game .shake-card::before { display: none }
+  .compact-game #modal-content:has(.help-steps) {
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr) auto;
+    max-height: calc(100dvh - 48px - env(safe-area-inset-top) - env(safe-area-inset-bottom));
+  }
+  .compact-game .help-steps { overflow: auto }
+}
 @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}}
