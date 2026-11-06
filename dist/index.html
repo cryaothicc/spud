@@ -5,11 +5,10 @@
   <meta name="theme-color" content="#f5f3e9">
   <meta name="description" content="Small spuds. Big feelings. Drop, match, and fall in love with eleven little potatoes in a cozy physics merge game.">
   <title>Potato Club</title>
-  <link rel="icon" href="assets/potato-7.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css">
+  <link rel="icon" href="assets/potato-7.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css"><link rel="stylesheet" href="portrait.css">
   <script defer src="viewport.js"></script><script defer src="assets/matter.min.js"></script><script defer src="shapes.js"></script><script defer src="physics.js"></script><script defer src="game.js"></script>
 </head>
 <body>
-<section class="mobile-notice" aria-labelledby="mobile-title"><div><span class="mobile-brand">potato<em>club</em></span><img src="assets/pc-only-potato.jpg" alt="A little potato waiting with its hands on its cheeks" width="253" height="310"><h1 id="mobile-title">Turn to play</h1><p>Rotate your device to landscape.</p></div></section>
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
 <symbol id="i-sound" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4zM15 8a6 6 0 0 1 0 8m3-11a10 10 0 0 1 0 14"/></symbol>
 <symbol id="i-mute" viewBox="0 0 24 24"><path d="m11 5-6 4H2v6h3l6 4zM16 9l6 6m0-6-6 6"/></symbol>
@@ -23,6 +22,7 @@
 <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-6-6 6 6-6 6"/></symbol>
 </defs></svg>
 <div class="site-wrap">
+<button id="open-collection" class="collection-button" aria-haspopup="dialog"><span class="collection-peek" aria-hidden="true"><img src="assets/potato-7.png" alt=""><img src="assets/potato-8.png" alt=""><img src="assets/potato-1.png" alt=""></span><span>Meet the spuds</span><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
 <header class="topbar">
   <a class="brand" href="./" aria-label="Potato Club home"><span class="brand-mascot"><img src="assets/potato-7.png" alt=""></span><span>potato<span class="brand-club">club</span></span></a>
   <div class="header-tag"><span></span> GOOD THINGS GROW TOGETHER</div>

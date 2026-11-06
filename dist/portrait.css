@@ -1,0 +1,94 @@
+.collection-button { display: none }
+.portrait-game { -webkit-text-size-adjust: 100%; text-size-adjust: 100% }
+.portrait-game .site-wrap {
+  position: relative;
+  inset: auto;
+  transform: none;
+  width: 100%;
+  max-width: 520px;
+  height: 100dvh;
+  padding: max(8px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+           max(10px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+  margin: auto;
+  container-type: size;
+  display: grid;
+  grid-template: "brand toolbar" 44px "score next" 74px "board board" minmax(0, 1fr)
+                 "merges hint" 20px "tilt shake" 60px "collection collection" 44px
+                 / minmax(0, 1fr) minmax(0, 1fr);
+  gap: 6px 12px;
+}
+.portrait-game :is(.topbar, .site-wrap > main, .game-layout, .intro-panel, .play-panel,
+                  .tools-panel, .play-style, .board-footer) { display: contents }
+.portrait-game :is(.header-tag, .toolbar-divider, .restart-button span, .intro-panel > .eyebrow,
+                  .intro-panel h1, .intro-copy, .little-note, .next-hint, .how-card, .page-footer,
+                  .play-style .section-eyebrow, .play-style h2, .shake-top, .shake-card h3,
+                  .shake-card p, .energy-help, .collection, .score-decoration, .mouse-symbol) { display: none }
+.portrait-game .brand { grid-area: brand; font-size: 24px; gap: 5px; letter-spacing: -1px }
+.portrait-game .brand-mascot { width: 29px; height: 31px }
+.portrait-game .toolbar { grid-area: toolbar; justify-self: end; gap: 0 }
+.portrait-game .toolbar button { width: 44px; height: 44px; padding: 0; justify-content: center }
+.portrait-game .score-card { grid-area: score; padding: 7px 12px 0; border-radius: 13px; box-shadow: 0 3px 0 #e0e4d7 }
+.portrait-game .score-top { font-size: 9px; letter-spacing: 1px }
+.portrait-game .score-top svg { height: 12px; width: 12px }
+.portrait-game .score-value { font-size: 28px; line-height: 1; margin: 2px 0 4px; letter-spacing: -1px }
+.portrait-game .score-bottom { padding: 3px 0; font-size: 9px }
+.portrait-game .score-bottom strong { font-size: 11px }
+.portrait-game .score-bottom > span { gap: 3px }
+.portrait-game .score-bottom svg { width: 11px; height: 11px }
+.portrait-game .next-card { grid-area: next; margin: 0; min-height: 0; padding: 8px 10px; border-radius: 13px; gap: 4px; background: #fcfaf0 }
+.portrait-game .next-card strong { font-size: 17px; line-height: 1.1; margin: 5px 0 0 }
+.portrait-game .next-card .eyebrow { font-size: 9px }
+.portrait-game .next-image-wrap, .portrait-game .next-card img { width: 45px; height: 45px; flex-shrink: 0 }
+.portrait-game .board-wrap {
+  grid-area: board;
+  width: min(100cqw, calc((100cqh - 272px) * 440 / 570));
+  justify-self: center;
+  align-self: center;
+  user-select: none;
+  -webkit-user-select: none;
+}
+.portrait-game .merge-note { grid-area: merges; justify-self: start; align-self: center; margin: 0; padding: 0; border: 0; background: none; font-size: 11px; color: #65765a }
+.portrait-game .board-footer > span { grid-area: hint; justify-self: end; align-self: center; color: #65765a; font-size: 10px; white-space: nowrap }
+.portrait-game .tilt-controls { grid-area: tilt; gap: 6px; justify-content: space-between; align-items: center }
+.portrait-game .tilt-controls button { height: 48px; width: 52px; border-radius: 12px; font-size: 26px; touch-action: none; user-select: none }
+.portrait-game .tilt-controls span { font-size: 10px }
+.portrait-game .shake-card { grid-area: shake; padding: 0; border: 0; background: none }
+.portrait-game .shake-card button { height: 44px; font-size: 12px; border-radius: 12px }
+.portrait-game .energy-label { display: none }
+.portrait-game .energy-track { height: 5px; margin: 6px 6px 0 }
+.portrait-game .collection-button { grid-area: collection; display: flex; align-items: center; justify-content: center; gap: 12px; padding: 0 12px; border: 1px solid var(--line); background: #eeeddf; border-radius: 12px; font: 17px var(--serif) }
+.collection-peek { display: flex }
+.collection-peek img { width: 30px; height: 32px; object-fit: contain; margin-right: -7px }
+.portrait-game dialog { width: min(420px, calc(100vw - 24px)); max-height: calc(100dvh - 24px); padding: 20px; border-radius: 20px }
+.portrait-game .modal-close { top: 4px; right: 4px; width: 44px; height: 44px }
+.portrait-game .modal-title { font-size: 27px; margin: 10px 0 }
+.portrait-game .modal-kicker { padding: 0 24px; font-size: 9px }
+.portrait-game .modal-art { width: 86px; height: 86px; margin-bottom: 12px }
+.portrait-game .modal-copy { margin: 10px 0; line-height: 1.5 }
+.portrait-game .modal-actions { margin-top: 16px }
+.portrait-game .modal-actions button { min-height: 44px }
+.portrait-game .modal-keys { display: none }
+.portrait-game .help-steps { gap: 10px; margin: 14px 0 }
+.portrait-game .help-steps li { line-height: 1.4 }
+.collection-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px }
+.collection-grid .spud-item { min-height: 64px; padding: 4px; border-radius: 12px; background: #eeeddf }
+.collection-grid .spud-image { width: 48px }
+.collection-grid .spud-item::after { display: none }
+.collection-grid .spud-number { font-size: 10px; margin: 2px 0 0 }
+.collection-grid .spud-item:hover .spud-image { transform: none }
+@media (max-width: 370px) {
+  .portrait-game .brand-mascot { display: none }
+  .portrait-game .site-wrap { column-gap: 8px }
+  .portrait-game .next-image-wrap, .portrait-game .next-card img { width: 36px; height: 40px }
+  .portrait-game .tilt-controls { gap: 4px }
+  .portrait-game .tilt-controls button { width: 44px }
+}
+@media (max-height: 620px) and (orientation: portrait) {
+  .portrait-game .site-wrap { grid-template-rows: 44px 64px minmax(0, 1fr) 16px 54px 44px; row-gap: 4px }
+  .portrait-game .board-wrap { width: min(100cqw, calc((100cqh - 242px) * 440 / 570)) }
+  .portrait-game .score-card { padding-top: 4px }
+  .portrait-game .score-value { font-size: 23px; margin: 1px 0 2px }
+  .portrait-game dialog { padding: 14px }
+  .portrait-game .collection-grid { gap: 5px }
+  .portrait-game .help-steps { gap: 7px; margin: 10px 0 }
+}

@@ -41,23 +41,6 @@ canvas:focus-visible{outline:none}
 .page-footer{height:38px;padding:0}
 dialog{max-height:calc(100dvh - 32px);overflow:auto}
 
-.mobile-notice { display: none }
-.rotate-device body { background: white }
-.rotate-device .site-wrap, .rotate-device .toast { display: none }
-.rotate-device .mobile-notice {
-  height: 100dvh;
-  padding: 24px;
-  display: grid;
-  place-items: center;
-  text-align: center;
-  background: white;
-}
-.mobile-brand { font: bold 24px var(--serif); letter-spacing: -1px }
-.mobile-brand em { font-weight: normal; margin-left: 3px }
-.mobile-notice img { display: block; width: min(46vw, 180px); max-height: 40dvh; object-fit: contain; margin: 24px auto }
-.mobile-notice h1 { font: normal 32px var(--serif); letter-spacing: -1px; margin: 0 0 10px }
-.mobile-notice p { color: var(--muted); margin: 0 }
-
 /* The board and side panels share the space above the full collection. */
 .compact-game .site-wrap {
   --collection-height: clamp(50px, 15dvh, 78px);
