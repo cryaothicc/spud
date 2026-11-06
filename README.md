@@ -8,7 +8,9 @@ Alternatively, run `node serve.mjs` and open `http://127.0.0.1:4173/`. The serve
 
 Mouse: move to aim, click to drop. Keyboard: arrows aim, Enter drops, A/D tilt, Space shakes, P pauses. Progress and personal best are saved in this browser's localStorage. Fresh start preserves best score and discovered characters.
 
-The game includes eleven merge tiers, chain score multipliers, one combined soft, jiggly and bouncy physics setting, a rechargeable shake, an overflow grace period, an end screen, an ultimate-potato celebration, sound synthesis, and reduced-motion support.
+The game includes eleven merge tiers, chain score multipliers, one combined soft, jiggly and bouncy physics setting, a rechargeable shake, an overflow grace period, an end screen, an ultimate-potato celebration, louder synthesized sound with a peak compressor, and reduced-motion support.
+
+On a phone, tap **Motion → Enable phone tilt** and allow motion access if prompted. Hold the phone comfortably during setup, then lean left or right to tilt the playfield. Motion uses a small dead zone and smoothing, works in either orientation, and pauses with the game. Open Motion again to recenter or turn it off; the tilt arrows remain available. Sensor control requires a supported browser on HTTPS (or localhost), and is enabled separately for each visit. Run `node --test tests/motion.test.cjs` to check sensor calibration, orientation changes, smoothing, permissions, cancellation, and missing readings.
 
 On phones, play upright for a full-screen portrait layout with the score and next potato above the board, tilt and shake below it, and a Meet the spuds button for the complete collection. Drag across the board to aim and lift your finger to drop. The game fits the available browser height. Opening a collection or help panel pauses the round, and closing it restores its previous pause state. Landscape and desktop layouts are also available.
 

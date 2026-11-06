@@ -1,4 +1,12 @@
 .collection-button { display: none }
+#motion-settings { display: none }
+@media (pointer: coarse) {
+  .compact-game .tilt-label { display: none }
+  .compact-game #motion-settings { display: block; font-size: 10px; width: 48px; height: 44px }
+}
+.portrait-game .tilt-label { display: none }
+.portrait-game #motion-settings { display: block; font-size: 10px; width: 48px; height: 48px; padding: 0; touch-action: manipulation }
+#motion-settings.enabled { background: #294b3e; color: #fff8e5; border-color: #294b3e }
 .portrait-game { -webkit-text-size-adjust: 100%; text-size-adjust: 100% }
 .portrait-game .site-wrap {
   position: relative;
