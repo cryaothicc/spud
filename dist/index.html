@@ -6,7 +6,7 @@
   <meta name="description" content="Small spuds. Big feelings. Drop, match, and fall in love with eleven little potatoes in a cozy physics merge game.">
   <title>Potato Club</title>
   <link rel="icon" href="assets/potato-7.png"><link rel="stylesheet" href="style.css"><link rel="stylesheet" href="layout.css"><link rel="stylesheet" href="portrait.css">
-  <script defer src="viewport.js"></script><script defer src="assets/matter.min.js"></script><script defer src="shapes.js"></script><script defer src="physics.js"></script><script defer src="motion.js"></script><script defer src="game.js"></script>
+  <script defer src="viewport.js"></script><script defer src="assets/matter.min.js"></script><script defer src="shapes.js"></script><script defer src="physics.js"></script><script defer src="game.js"></script>
 </head>
 <body>
 <svg class="icon-defs" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
@@ -58,7 +58,7 @@
       <div class="board-message" id="board-message" aria-live="polite"></div>
       <div class="board-overlay" id="pause-overlay" hidden><span class="overlay-flower">✳</span><h2>Taking root.</h2><p>Your potatoes can wait.</p><button class="primary-button" id="resume"><svg><use href="#i-play"/></svg> Keep growing</button></div>
     </div>
-    <div class="board-footer"><span><span class="mouse-symbol" aria-hidden="true"></span> <span id="input-hint">Move to aim · click to drop</span></span><div class="tilt-controls" aria-label="Tilt the playfield"><button id="tilt-left" aria-label="Tilt left" title="Hold A to tilt left">↶</button><span class="tilt-label">tilt</span><button id="motion-settings" aria-label="Phone tilt settings" aria-haspopup="dialog" title="Phone tilt settings">Motion</button><button id="tilt-right" aria-label="Tilt right" title="Hold D to tilt right">↷</button></div></div>
+    <div class="board-footer"><span><span class="mouse-symbol" aria-hidden="true"></span> <span id="input-hint">Move to aim · click to drop</span></span><div class="tilt-controls" aria-label="Tilt the playfield"><button id="tilt-left" aria-label="Tilt left" title="Hold A to tilt left">↶</button><span>tilt</span><button id="tilt-right" aria-label="Tilt right" title="Hold D to tilt right">↷</button></div></div>
   </section>
   <aside class="tools-panel" aria-label="Play style and power-ups">
     <div class="play-style"><div class="section-eyebrow">MAKE YOURSELF AT HOME</div><h2>A little room to grow</h2><div class="merge-note"><span id="merge-count">0 merges</span></div></div>

@@ -6,10 +6,7 @@
  const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
  let best=0,discovered=new Set([0,1,2,3]),soundOn=true,images=[],ready=false,audioContext=null,lastFrame=0,accumulator=0,saveClock=0,uiClock=0,aimX=220,particles=[],floaters=[],toastTimer,messageTimer,started=false,modalWasPaused=false,shakeTime=0,keys=new Set(),keyboardAim=false,won=false;
  try{const p=JSON.parse(localStorage.getItem(PREFS)||'{}');best=Number.isFinite(p.best)?Math.max(0,p.best):0;soundOn=p.sound!==false;won=p.won===true;if(Array.isArray(p.discovered))p.discovered.forEach(n=>{if(Number.isInteger(n)&&n>=0&&n<11)discovered.add(n);});}catch{}
- const motion = new PotatoMotionTilt();
- let manualTilt = 0;
  let audioBus = null;
- let motionConnecting = false;
  const patch=new Patch({deform:!reduced,onMerge:merge,onDrop:()=>{started=true;$('#drop-instruction').classList.add('hidden');playSound('drop');updateUI();save();},onEnd:endGame});
  function savePrefs(){try{localStorage.setItem(PREFS,JSON.stringify({best,sound:soundOn,discovered:[...discovered],won}));}catch{}}
  function save(){if(!ready)return;try{localStorage.setItem(STORE,JSON.stringify(patch.snapshot()));savePrefs();}catch{}}
@@ -40,9 +37,9 @@
  function merge(event){const{tier,x,y,points,combo,jackpot}=event;best=Math.max(best,patch.score);burst(x,y,tier,jackpot);floaters.push({x,y:y-15,text:`+${points.toLocaleString()}`,life:1});playSound('merge',tier||10);if(tier!==null&&!discovered.has(tier)){discovered.add(tier);updateCollection();const item=$(`[data-tier="${tier}"]`);item?.classList.add('just-unlocked');toast(`New friend: ${TYPES[tier].name}!`);}if(combo>1)message(combo>=4?`${combo}× · a whole lot of love!`:`${combo}× · better together`);if(tier===10&&!won){won=true;setTimeout(()=>win(),850);}if(jackpot){message('Love comes full circle! +5,000');playSound('win');}$('#score').classList.remove('pop');void $('#score').offsetWidth;$('#score').classList.add('pop');updateUI();save();}
  function updateUI(){const type=TYPES[patch.next];$('#score').textContent=patch.score.toLocaleString();$('#best').textContent=best.toLocaleString();$('#next-image').src=`assets/potato-${type.asset}.png`;$('#next-image').alt=`Next: ${type.name}`;$('#next-name').textContent=type.name;$('#merge-count').textContent=`${patch.merges} ${patch.merges===1?'merge':'merges'}`;const energy=Math.floor(patch.energy);$('#energy-number').textContent=energy;$('#energy-fill').style.width=energy+'%';$('#energy-bar').setAttribute('aria-valuenow',energy);$('#shake').disabled=energy<30||patch.ended||patch.paused;$('#shake').title=energy<30?'Needs 30 energy. Rest or merge to recharge.':'Shake the patch (Space)';$('#pause').setAttribute('aria-label',patch.paused?'Resume game':'Pause game');$('#pause svg use').setAttribute('href',patch.paused?'#i-play':'#i-pause');$('#sound').setAttribute('aria-pressed',String(soundOn));$('#sound').setAttribute('aria-label',soundOn?'Mute sound':'Enable sound');$('#sound').title=soundOn?'Sound on':'Sound off';$('#sound svg use').setAttribute('href',soundOn?'#i-sound':'#i-mute');}
  function updateCollection(){$('#collection-route').innerHTML=TYPES.map((t,i)=>`<button class="spud-item ${discovered.has(i)?'discovered':'undiscovered'}" data-tier="${i}" aria-label="${String(i+1).padStart(2,'0')}. ${t.name}${discovered.has(i)?', discovered':', not discovered yet'}" title="${t.name}"><span class="spud-image"><img src="assets/potato-${t.asset}.png" alt=""></span><span class="spud-number">${String(i+1).padStart(2,'0')}</span></button>`).join('');$('#collection-progress').textContent=`${discovered.size} / 11 discovered`;$$('[data-tier]').forEach(b=>b.addEventListener('click',()=>showSpud(Number(b.dataset.tier))));}
- function openModal(html){if(!$('#modal').open){modalWasPaused=patch.paused;patch.paused=true;patch.tilt=0;manualTilt=0;motion.recenter();keys.clear();$('#modal').showModal();document.body.classList.add('modal-open');}$('#modal-content').innerHTML=html;updateUI();}
+ function openModal(html){if(!$('#modal').open){modalWasPaused=patch.paused;patch.paused=true;patch.tilt=0;keys.clear();$('#modal').showModal();document.body.classList.add('modal-open');}$('#modal-content').innerHTML=html;updateUI();}
  function closeModal(){$('#modal').close();}
- $('#modal').addEventListener('close',()=>{if(motionConnecting){motion.stop();motionConnecting=false;}document.body.classList.remove('modal-open');patch.paused=modalWasPaused;motion.recenter();$('#pause-overlay').hidden=!patch.paused;updateUI();canvas.focus({preventScroll:true});});
+ $('#modal').addEventListener('close',()=>{document.body.classList.remove('modal-open');patch.paused=modalWasPaused;$('#pause-overlay').hidden=!patch.paused;updateUI();canvas.focus({preventScroll:true});});
  $('#modal-close').addEventListener('click',()=>{if(patch.ended){newGame();}closeModal();});
  $('#modal').addEventListener('cancel',e=>{if(patch.ended){e.preventDefault();return;}});
  $('#modal').addEventListener('click',e=>{if(e.target===$('#modal')&&!patch.ended){const r=$('#modal').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal();}});
@@ -59,65 +56,19 @@
  }
  $('#open-collection').onclick = showCollection;
  function help(){openModal(`<div class="modal-kicker">WELCOME TO POTATO CLUB</div><h2 class="modal-title" id="modal-title">Let good things grow.</h2><p class="modal-copy">A cozy little game about coming together.</p><ol class="help-steps"><li><span class="help-number">1</span><div><strong>Aim, then let go.</strong>Move your mouse and click to drop. On touchscreens, drag to aim and lift to drop.</div></li><li><span class="help-number">2</span><div><strong>Two of a kind, one new friend.</strong>Matching potatoes merge when they touch. Quick chain reactions multiply your points.</div></li><li><span class="help-number">3</span><div><strong>Leave a little breathing room.</strong>Stay below the dashed line. A crowded patch has 3 seconds to settle before the round ends.</div></li><li><span class="help-number">4</span><div><strong>Help your potatoes mingle.</strong>Hold the tilt arrows, or shake for 30 energy. Energy returns with time and every merge.</div></li></ol><div class="modal-keys"><span><kbd>← →</kbd> aim</span><span><kbd>Enter</kbd> drop</span><span><kbd>A D</kbd> tilt</span><span><kbd>Space</kbd> shake</span></div><div class="modal-actions"><button id="start-help" class="primary-button">Let’s grow something</button></div>`);$('#start-help').onclick=()=>{unlockAudio();closeModal();};}
- function newGame(){patch.reset();manualTilt=0;motion.recenter();particles=[];floaters=[];started=false;$('#drop-instruction').classList.remove('hidden');$('#danger-label').classList.remove('visible');$('#pause-overlay').hidden=true;modalWasPaused=false;aimX=220;updateUI();save();}
+ function newGame(){patch.reset();particles=[];floaters=[];started=false;$('#drop-instruction').classList.remove('hidden');$('#danger-label').classList.remove('visible');$('#pause-overlay').hidden=true;modalWasPaused=false;aimX=220;updateUI();save();}
  function restart(){openModal(`<img class="modal-art" src="assets/potato-7.png" alt=""><div class="modal-kicker">A FRESH LITTLE START</div><h2 class="modal-title" id="modal-title">Room for new friends?</h2><p class="modal-copy">Start a new patch from zero. Your personal best and discovered potatoes stay with you.</p><div class="modal-actions"><button id="cancel-restart" class="secondary-button">Keep this patch</button><button id="confirm-restart" class="primary-button">Fresh start</button></div>`);$('#cancel-restart').onclick=closeModal;$('#confirm-restart').onclick=()=>{newGame();closeModal();};}
  function endGame(){playSound('end');save();setTimeout(()=>{openModal(`<img class="modal-art" src="assets/potato-4.png" alt="A tired little potato"><div class="modal-kicker">THAT’S ONE FULL PATCH</div><h2 class="modal-title" id="modal-title">A lovely little mess.</h2><div class="end-score">${patch.score.toLocaleString()}</div><p class="modal-copy">${patch.score>=best&&patch.score>0?'A new personal best. Look at you grow!':'Every patch is a new possibility.'}<br>${patch.merges} merges · ${discovered.size} personalities discovered</p><div class="modal-actions"><button id="play-again" class="primary-button">Grow another round <svg><use href="#i-arrow"/></svg></button></div>`);$('#play-again').onclick=()=>{newGame();closeModal();};},500);}
  function win(){playSound('win');burst(220,180,10,true);openModal(`<img class="modal-art" src="assets/potato-1.png" alt="Love Supreme"><div class="modal-kicker">YOU GREW THE BIG LOVE</div><h2 class="modal-title" id="modal-title">Look what you made.</h2><p class="modal-copy">A whole lot of little moments. One very big feeling.<br>You found Love Supreme, the final potato.<br>Keep growing and see how far your patch can go.</p><div class="modal-actions"><button id="keep-growing" class="primary-button">There’s always more love</button></div>`);$('#keep-growing').onclick=closeModal;savePrefs();}
- function togglePause(force){if(patch.ended||$('#modal').open)return;patch.paused=typeof force==='boolean'?force:!patch.paused;patch.tilt=0;manualTilt=0;motion.recenter();keys.clear();$('#pause-overlay').hidden=!patch.paused;updateUI();save();}
+ function togglePause(force){if(patch.ended||$('#modal').open)return;patch.paused=typeof force==='boolean'?force:!patch.paused;patch.tilt=0;keys.clear();$('#pause-overlay').hidden=!patch.paused;updateUI();save();}
  function shake(){unlockAudio();if(patch.shake()){shakeTime=450;playSound('shake');updateUI();save();}else if(patch.energy<30)toast('A little recharge first. Shaking takes 30 energy.');}
  $('#help').onclick=help;$('#restart').onclick=restart;$('#pause').onclick=()=>togglePause();$('#resume').onclick=()=>{unlockAudio();togglePause(false);};$('#shake').onclick=shake;$('#sound').onclick=()=>{soundOn=!soundOn;if(soundOn){unlockAudio();playSound('merge',3);}updateUI();savePrefs();};
- function motionSettings() {
-   openModal(`<div class="modal-kicker">PHONE CONTROLS</div>
-     <h2 class="modal-title" id="modal-title">Tilt to move.</h2>
-     <p class="modal-copy">Hold your phone comfortably, then enable motion. Lean left or right to tilt the board.</p>
-     <p class="modal-copy" id="motion-status" role="status">${motion.enabled ? 'Phone tilt is on.' : 'Phone tilt is off.'}</p>
-     <div class="modal-actions"><button id="motion-toggle" class="primary-button">${motion.enabled ? 'Turn off motion' : 'Enable phone tilt'}</button>
-     ${motion.enabled ? '<button id="motion-center" class="secondary-button">Recenter</button>' : ''}</div>`);
-   $('#motion-toggle').onclick = async () => {
-     if (motion.enabled) {
-       motion.stop();
-       $('#motion-settings').classList.remove('enabled');
-       motionSettings();
-       return;
-     }
-     const button = $('#motion-toggle');
-     button.disabled = true;
-     motionConnecting = true;
-     $('#motion-status').textContent = 'Keep your phone steady while connecting…';
-     try {
-       await motion.start();
-       motionConnecting = false;
-       $('#motion-settings').classList.add('enabled');
-       closeModal();
-       toast('Phone tilt is on. Lean left or right.');
-     } catch (error) {
-       const status = $('#motion-status');
-       if (status && $('#modal').open && $('#motion-toggle') === button) status.textContent = error.message;
-     } finally {
-       motionConnecting = false;
-       button.disabled = false;
-     }
-   };
-   if ($('#motion-center')) $('#motion-center').onclick = () => {
-     motion.recenter();
-     closeModal();
-     toast('Centered. Lean left or right.');
-   };
- }
- $('#motion-settings').onclick = motionSettings;
- function currentTilt(dt) {
-   if (keys.has('a')) return -1;
-   if (keys.has('d')) return 1;
-   return manualTilt || motion.value(dt);
- }
  function point(e){const r=canvas.getBoundingClientRect();aimX=(e.clientX-r.left)*440/r.width;patch.setAim(aimX);keyboardAim=false;}
  let touchPointer = null;
  window.addEventListener('potato:viewport', () => {
    touchPointer = null;
    keys.clear();
    patch.tilt = 0;
-   manualTilt = 0;
-   motion.recenter();
    document.querySelectorAll('.tilt-controls .active').forEach(button => button.classList.remove('active'));
    accumulator = 0;
    lastFrame = 0;
@@ -131,10 +82,10 @@
  };
  canvas.addEventListener('pointercancel', cancelAim);
  canvas.addEventListener('lostpointercapture', cancelAim);
- ['left','right'].forEach((side,i)=>{const b=$('#tilt-'+side);const stop=()=>{manualTilt=0;patch.tilt=0;b.classList.remove('active');};b.addEventListener('pointerdown',e=>{if(patch.paused||patch.ended)return;e.preventDefault();b.setPointerCapture(e.pointerId);manualTilt=i?1:-1;b.classList.add('active');});b.addEventListener('pointerup',stop);b.addEventListener('pointercancel',stop);b.addEventListener('lostpointercapture',stop);b.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!patch.paused&&!patch.ended){e.preventDefault();manualTilt=i?1:-1;b.classList.add('active');}});b.addEventListener('keyup',stop);b.addEventListener('blur',stop);});
+ ['left','right'].forEach((side,i)=>{const b=$('#tilt-'+side);const stop=()=>{patch.tilt=0;b.classList.remove('active');};b.addEventListener('pointerdown',e=>{if(patch.paused||patch.ended)return;e.preventDefault();b.setPointerCapture(e.pointerId);patch.tilt=i?1:-1;b.classList.add('active');});b.addEventListener('pointerup',stop);b.addEventListener('pointercancel',stop);b.addEventListener('lostpointercapture',stop);b.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!patch.paused&&!patch.ended){e.preventDefault();patch.tilt=i?1:-1;b.classList.add('active');}});b.addEventListener('keyup',stop);b.addEventListener('blur',stop);});
  window.addEventListener('keydown',e=>{if($('#modal').open)return;if(e.target instanceof HTMLButtonElement&&['Enter',' '].includes(e.key))return;const k=e.key.toLowerCase();if(['arrowleft','arrowright','enter',' ','a','d','p','escape'].includes(k))e.preventDefault();if(['p','escape'].includes(k)&&!e.repeat){togglePause();return;}if(patch.paused||patch.ended||!ready)return;if(k==='enter'&&!e.repeat){unlockAudio();patch.drop();}if(k===' '&&!e.repeat)shake();if(['arrowleft','arrowright','a','d'].includes(k)){keys.add(k);keyboardAim=true;}});
  window.addEventListener('keyup',e=>{const k=e.key.toLowerCase();keys.delete(k);if(k==='a'||k==='d')patch.tilt=0;});
- window.addEventListener('blur',()=>{keys.clear();patch.tilt=0;manualTilt=0;motion.recenter();touchPointer=null;});
+ window.addEventListener('blur',()=>{keys.clear();patch.tilt=0;touchPointer=null;});
  document.addEventListener('visibilitychange',()=>{if(document.hidden){save();if(!patch.paused&&!patch.ended&&!$('#modal').open)togglePause(true);}lastFrame=0;});
  window.addEventListener('pagehide',save);
  function resize(){const dpr=Math.min(window.devicePixelRatio||1,2.5);canvas.width=Math.round(440*dpr);canvas.height=Math.round(570*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);}
@@ -148,6 +99,6 @@
  for(const p of floaters){ctx.save();ctx.globalAlpha=Math.max(0,p.life);ctx.font='bold 17px Georgia';ctx.textAlign='center';ctx.strokeStyle='#f7f3e8';ctx.lineWidth=3;ctx.strokeText(p.text,p.x,p.y);ctx.fillStyle='#527347';ctx.fillText(p.text,p.x,p.y);ctx.restore();if(moving){p.y-=dt*.035;p.life-=dt*.0009;}}floaters=floaters.filter(p=>p.life>0);
  $('#danger-label').classList.toggle('visible',danger&&!patch.ended);if(danger)$('#danger-time').textContent=Math.max(1,Math.ceil((3200-patch.danger)/1000));
  }
- function loop(now){if(!lastFrame)lastFrame=now;const dt=Math.min(40,now-lastFrame);lastFrame=now;if(ready){if(!patch.paused&&!patch.ended){if(keys.has('arrowleft'))patch.setAim(patch.aim-dt*.32);if(keys.has('arrowright'))patch.setAim(patch.aim+dt*.32);patch.tilt=currentTilt(dt);accumulator+=dt;while(accumulator>=1000/120){patch.step(1000/120);accumulator-=1000/120;}}else accumulator=0;draw(dt);if(shakeTime>0){shakeTime-=dt;$('#board-wrap').style.transform=reduced?'':`translateX(${Math.sin(shakeTime*.08)*3*shakeTime/450}px)`;}else $('#board-wrap').style.transform=patch.tilt&&!reduced?`rotate(${patch.tilt*1.2}deg)`:'';uiClock+=dt;if(uiClock>200){updateUI();uiClock=0;}saveClock+=dt;if(saveClock>3000){save();saveClock=0;}}requestAnimationFrame(loop);}
+ function loop(now){if(!lastFrame)lastFrame=now;const dt=Math.min(40,now-lastFrame);lastFrame=now;if(ready){if(!patch.paused&&!patch.ended){if(keys.has('arrowleft'))patch.setAim(patch.aim-dt*.32);if(keys.has('arrowright'))patch.setAim(patch.aim+dt*.32);if(keys.has('a')||keys.has('d'))patch.tilt=keys.has('a')?-1:1;accumulator+=dt;while(accumulator>=1000/120){patch.step(1000/120);accumulator-=1000/120;}}else accumulator=0;draw(dt);if(shakeTime>0){shakeTime-=dt;$('#board-wrap').style.transform=reduced?'':`translateX(${Math.sin(shakeTime*.08)*3*shakeTime/450}px)`;}else $('#board-wrap').style.transform=patch.tilt&&!reduced?`rotate(${patch.tilt*1.2}deg)`:'';uiClock+=dt;if(uiClock>200){updateUI();uiClock=0;}saveClock+=dt;if(saveClock>3000){save();saveClock=0;}}requestAnimationFrame(loop);}
  Promise.all(TYPES.map(t=>new Promise((resolve,reject)=>{const img=new Image();img.onload=()=>resolve(img);img.onerror=()=>reject(new Error('A potato could not load.'));img.src=`assets/potato-${t.asset}.png`;}))).then(result=>{images=result;let restored=false;try{restored=patch.restore(JSON.parse(localStorage.getItem(STORE)||'null'));}catch{}if(!restored)patch.reset();started=restored&&(patch.merges>0||patch.bodies.length>5);if(started)$('#drop-instruction').classList.add('hidden');ready=true;resize();updateCollection();updateUI();if(matchMedia('(pointer:coarse)').matches)$('#input-hint').textContent='Drag to aim · lift to drop';requestAnimationFrame(loop);}).catch(()=>{toast('A potato went missing. Refresh to try loading again.');$('#drop-instruction').textContent='Couldn’t load the potatoes. Please refresh.';});
 })();
