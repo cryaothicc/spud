@@ -1,24 +1,98 @@
-# Potato Club
+<div align="center">
 
-A desktop and mobile potato merge game, built with eleven transparent PNG characters. Static HTML, CSS, Canvas 2D and Matter.js 0.20.0; no build step or runtime service dependencies.
+# 🥔 Potato Club
 
-On Windows, double-click **Start Potato Club.cmd**. It starts the game and opens your browser. Keep its terminal window open while playing; close it or press Ctrl+C to stop. Node.js 18 or newer is required; no package installation or build is needed.
+**A desktop and mobile potato merge game with eleven characters, jiggly physics, and no build step.**
 
-Alternatively, run `node serve.mjs` and open `http://127.0.0.1:4173/`. The server only listens on this computer. All game code and artwork are included locally, so playing needs no internet connection. The same `dist/` files are the finished production game.
+[**Play Now →**](https://spud-xi.vercel.app/)
 
-Mouse: move to aim, click to drop. Keyboard: arrows aim, Enter drops, A/D tilt, Space shakes, P pauses. Progress and personal best are saved in this browser's localStorage. Fresh start preserves best score and discovered characters.
+![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)
+![Canvas](https://img.shields.io/badge/Canvas_2D-F7DF1E?logo=javascript&logoColor=black)
+![Matter.js](https://img.shields.io/badge/Matter.js-0.20.0-4B5562)
+![Vercel](https://img.shields.io/badge/Deployed_on-Vercel-000000?logo=vercel&logoColor=white)
 
-The game includes eleven merge tiers, chain score multipliers, one combined soft, jiggly and bouncy physics setting, a rechargeable shake, an overflow grace period, an end screen, an ultimate-potato celebration, louder synthesized sound with a peak compressor, and reduced-motion support.
+<!-- Replace with a real screenshot or GIF -->
+<img src="./docs/screenshot.png" alt="Potato Club gameplay" width="800" />
 
+</div>
 
-On phones, play upright for a full-screen portrait layout with the score and next potato above the board, tilt and shake below it, and a Meet the spuds button for the complete collection. Drag across the board to aim and lift your finger to drop. The game fits the available browser height. Opening a collection or help panel pauses the round, and closing it restores its previous pause state. Landscape and desktop layouts are also available.
+---
 
-Characters render as the original transparent PNGs, without circular backplates or round colliders. `scripts/build-shapes.cjs` reads the PNG alpha, traces the main connected silhouette and its transparent holes, simplifies the contour, triangulates with Earcut, and combines convex pieces into compound Matter.js bodies. Detached tear droplets and tiny alpha specks stay decorative. The outlines approximate the pixels for stable, efficient collision detection. Run `node scripts/build-shapes.cjs` after replacing artwork.
+## Overview
 
-Impacts drive a damped squash-and-stretch spring, with a gentle rebound and a soft jelly-like wobble. The collider and sprite use the same area-preserving deformation so their contacts stay aligned. This is a springy deforming silhouette, not a full cloth or fluid simulation. Reduced-motion mode disables deformation. Existing version-1 saves, high scores and collection progress remain compatible.
+Drop potatoes into the box and merge matching pairs to evolve them through eleven tiers, all the way to the ultimate potato. Built with static HTML, CSS, Canvas 2D, and Matter.js. There is no build step and no runtime service dependencies.
 
-Run `node tests/physics.test.cjs` to check merges, silhouette bounds, transparent holes, landing jiggle, rebound, cooldowns, pauses, shake cost, overflow, and persistence. Matter.js is vendored in `dist/assets/matter.min.js` with its MIT license header intact. Earcut is used only by the offline shape builder; its ISC license is in `scripts/lib/EARCUT-LICENSE.txt`.
+## Features
 
-Browser saves belong to the address where you play. Progress from a previous hosted address does not automatically transfer to the local address. Always use `http://127.0.0.1:4173/` and the same browser profile to keep your local progress.
+- Eleven merge tiers with chain score multipliers
+- Soft, jiggly, bouncy physics in a single combined setting
+- Rechargeable shake and an overflow grace period
+- End screen and an ultimate-potato celebration
+- Louder synthesized sound with a peak compressor
+- Reduced-motion support
+- Saved progress and personal best
+- Responsive layouts for desktop, mobile portrait, and landscape
 
-This repository has no cloud hosting configuration. To host elsewhere in the future, serve the contents of `dist/` as a static website. There is no online leaderboard or backend.
+## Controls
+
+| Input    | Action                                     |
+| -------- | ------------------------------------------ |
+| Mouse    | Move to aim, click to drop                 |
+| Keyboard | Arrows to aim, **Enter** to drop           |
+| Keyboard | **A** / **D** to tilt, **Space** to shake  |
+| Keyboard | **P** to pause                             |
+| Touch    | Drag across the board to aim, lift to drop |
+
+### Mobile
+
+Play upright for a full-screen portrait layout: score and next potato above the board, tilt and shake controls below it, and a **Meet the spuds** button for the full collection. The game fits the available browser height. Opening the collection or help panel pauses the round, and closing it restores the previous pause state.
+
+## Run Locally
+
+Requires **Node.js 18 or newer**. No package installation or build is needed.
+
+**Windows:** double-click **Start Potato Club.cmd**. It starts the game and opens your browser. Keep the terminal window open while playing; close it or press `Ctrl+C` to stop.
+
+**Any platform:**
+
+```bash
+node serve.mjs
+```
+
+Then open [http://127.0.0.1:4173/](http://127.0.0.1:4173/). The server only listens on your computer, and all code and artwork are included locally, so no internet connection is needed. The `dist/` folder is the finished production game.
+
+## Saves and Progress
+
+Progress and personal best are stored in your browser's `localStorage`. A fresh start keeps your best score and discovered characters. Existing version-1 saves remain compatible.
+
+Saves belong to the address you play on, so progress on the [hosted version](https://spud-xi.vercel.app/) and on `http://127.0.0.1:4173/` are separate and do not transfer. To keep your progress, always use the same address in the same browser profile.
+
+## How It Works
+
+**Shapes.** Characters render as the original transparent PNGs, with no circular backplates or round colliders. `scripts/build-shapes.cjs` reads each PNG's alpha channel, traces the main connected silhouette and its transparent holes, simplifies the contour, triangulates it with Earcut, and combines convex pieces into compound Matter.js bodies. Detached tear droplets and tiny alpha specks stay decorative. The outlines approximate the pixels for stable, efficient collisions.
+
+After replacing artwork, rebuild the shapes:
+
+```bash
+node scripts/build-shapes.cjs
+```
+
+**Jelly physics.** Impacts drive a damped squash-and-stretch spring with a gentle rebound and a soft wobble. The collider and sprite share the same area-preserving deformation, so contacts stay aligned. This is a springy deforming silhouette, not a full cloth or fluid simulation. Reduced-motion mode disables deformation.
+
+## Testing
+
+```bash
+node tests/physics.test.cjs
+```
+
+Covers merges, silhouette bounds, transparent holes, landing jiggle, rebound, cooldowns, pauses, shake cost, overflow, and persistence.
+
+## Deployment
+
+The live game is hosted on Vercel at [spud-xi.vercel.app](https://spud-xi.vercel.app/). It is a plain static site: to host it anywhere else, serve the contents of `dist/` as a static website. There is no backend and no online leaderboard.
+
+## Credits and Licenses
+
+- [Matter.js](https://brm.io/matter-js/) is vendored in `dist/assets/matter.min.js` with its MIT license header intact.
+- [Earcut](https://github.com/mapbox/earcut) is used only by the offline shape builder. Its ISC license is in `scripts/lib/EARCUT-LICENSE.txt`.
